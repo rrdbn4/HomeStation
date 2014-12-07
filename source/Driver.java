@@ -1,7 +1,7 @@
 public class Driver
 {
-	public static void main(String[] args)
-	{
-		new WeatherFrame();
-	}
+  public static void main(String[] args)
+  {
+    new WeatherFrame();
+  }
 }
