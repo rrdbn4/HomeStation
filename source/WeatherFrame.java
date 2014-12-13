@@ -12,18 +12,42 @@ public class WeatherFrame extends JFrame
 {
   String data = "";
   BufferedImage radar;
-
+  final float marginRight = 0.25f;
+  final float marginBottom = 0.25f;
+  int width, height;
+  boolean viewInit = false;
   public WeatherFrame()
   {
     super("Home Station");
-    setLayout(new FlowLayout());
+    setLayout(null);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setVisible(true);
 
     setExtendedState(Frame.MAXIMIZED_BOTH);
     validate();
+    repaint();
 
     displayRadar();
+  }
+
+  public void makeBottomBar()
+  {
+    JPanel panel = new JPanel();
+    panel.setBounds(getInsets().left, (int)(height * (1-marginBottom)), (int)(width * (1-marginRight)), (int)(height * marginBottom));
+    panel.setBackground(Color.GREEN);
+    add(panel);
+    validate();
+    repaint();
+  }
+
+  public void makeSidebar()
+  {
+    JPanel panel = new JPanel();
+    panel.setBounds(getInsets().left + (int)(width * (1-marginRight)), 0, (int)(width * marginRight), height);
+    panel.setBackground(Color.RED);
+    add(panel);
+    validate();
+    repaint();
   }
 
   public void displayRadar()
@@ -47,7 +71,7 @@ public class WeatherFrame extends JFrame
     {
       URL oracle = new URL("http://api.wunderground.com/api/a2c9b857874a2be5/conditions/q/MO/Benton_City.json");
       URLConnection yc = oracle.openConnection();
-      BufferedReader in = null;
+      BufferedReader in;
       in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
       String inputLine;
       while ((inputLine = in.readLine()) != null)
@@ -71,7 +95,17 @@ public class WeatherFrame extends JFrame
   public void paint(Graphics g)
   {
     super.paint(g);
+    width = getWidth() - getInsets().left - getInsets().right;
+    height = getHeight() - getInsets().top - getInsets().bottom;
     if(radar != null)
-      g.drawImage(radar, getInsets().left, getInsets().top, this);
+    {
+      g.drawImage(radar, getInsets().left, getInsets().top, (int) (width * (1 - marginRight)), (int)(height * (1 - marginBottom)), this);
+      if(!viewInit)
+      {
+        viewInit = true;
+        makeSidebar();
+        makeBottomBar();
+      }
+    }
   }
 }
