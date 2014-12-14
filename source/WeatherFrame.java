@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -15,7 +16,9 @@ public class WeatherFrame extends JFrame
   final float marginRight = 0.25f;
   final float marginBottom = 0.25f;
   int width, height;
-  boolean viewInit = false;
+  JPanel bottomBar, sideBar;
+
+
   public WeatherFrame()
   {
     super("Home Station");
@@ -27,27 +30,32 @@ public class WeatherFrame extends JFrame
     validate();
     repaint();
 
+    makeSidebars();
     displayRadar();
   }
 
-  public void makeBottomBar()
+  public void makeSidebars()
   {
-    JPanel panel = new JPanel();
-    panel.setBounds(getInsets().left, (int)(height * (1-marginBottom)), (int)(width * (1-marginRight)), (int)(height * marginBottom));
-    panel.setBackground(Color.GREEN);
-    add(panel);
+    bottomBar = new JPanel();
+    bottomBar.setBackground(Color.GREEN);
+    add(bottomBar);
+
+    sideBar = new JPanel();
+    sideBar.setBackground(Color.RED);
+    add(sideBar);
+
+    resizeViews();
     validate();
     repaint();
   }
 
-  public void makeSidebar()
+  public void resizeViews()
   {
-    JPanel panel = new JPanel();
-    panel.setBounds(getInsets().left + (int)(width * (1-marginRight)), 0, (int)(width * marginRight), height);
-    panel.setBackground(Color.RED);
-    add(panel);
+    if(sideBar == null || bottomBar == null)
+      return;
+    bottomBar.setBounds(getInsets().left, (int)(height * (1-marginBottom)), (int)(width * (1-marginRight)), (int)(height * marginBottom));
+    sideBar.setBounds(getInsets().left + (int)(width * (1-marginRight)), 0, (int)(width * marginRight), height);
     validate();
-    repaint();
   }
 
   public void displayRadar()
@@ -97,15 +105,10 @@ public class WeatherFrame extends JFrame
     super.paint(g);
     width = getWidth() - getInsets().left - getInsets().right;
     height = getHeight() - getInsets().top - getInsets().bottom;
+    resizeViews();
     if(radar != null)
     {
       g.drawImage(radar, getInsets().left, getInsets().top, (int) (width * (1 - marginRight)), (int)(height * (1 - marginBottom)), this);
-      if(!viewInit)
-      {
-        viewInit = true;
-        makeSidebar();
-        makeBottomBar();
-      }
     }
   }
 }
