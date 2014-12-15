@@ -16,7 +16,9 @@ public class WeatherFrame extends JFrame
   final float marginRight = 0.25f;
   final float marginBottom = 0.25f;
   int width, height;
-  JPanel bottomBar, sideBar;
+  ConditionsPanel sideBar;
+  ForecastPanel bottomBar;
+  RadarUpdater radarService;
 
 
   public WeatherFrame()
@@ -30,18 +32,16 @@ public class WeatherFrame extends JFrame
     validate();
     repaint();
 
-    makeSidebars();
-    displayRadar();
+    setupSidebars();
+    radarService = new RadarUpdater(this);
   }
 
-  public void makeSidebars()
+  public void setupSidebars()
   {
-    bottomBar = new JPanel();
-    bottomBar.setBackground(Color.GREEN);
+    bottomBar = new ForecastPanel();
     add(bottomBar);
 
-    sideBar = new JPanel();
-    sideBar.setBackground(Color.RED);
+    sideBar = new ConditionsPanel();
     add(sideBar);
 
     resizeViews();
@@ -53,24 +53,15 @@ public class WeatherFrame extends JFrame
   {
     if(sideBar == null || bottomBar == null)
       return;
-    bottomBar.setBounds(getInsets().left, (int)(height * (1-marginBottom)), (int)(width * (1-marginRight)), (int)(height * marginBottom));
+    bottomBar.setBounds(getInsets().left, (int) (height * (1 - marginBottom)), (int) (width * (1 - marginRight)), (int) (height * marginBottom));
     sideBar.setBounds(getInsets().left + (int)(width * (1-marginRight)), 0, (int)(width * marginRight), height);
     validate();
   }
 
-  public void displayRadar()
+  public void setRadarImage(BufferedImage radarImg)
   {
-    try
-    {
-      BufferedImage img = ImageIO.read(new URL(Constants.URL_BASE + Constants.RADAR_LOCAL_URL));
-      radar = img;
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-    } finally
-    {
-      repaint();
-    }
+    radar = radarImg;
+    repaint();
   }
 
   public void getConditions()
