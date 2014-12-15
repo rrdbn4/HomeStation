@@ -68,7 +68,7 @@ public class WeatherFrame extends JFrame
   {
     try
     {
-      URL oracle = new URL("http://api.wunderground.com/api/a2c9b857874a2be5/conditions/q/MO/Benton_City.json");
+      URL oracle = new URL(Constants.URL_BASE + Constants.CONDITIONS_URL);
       URLConnection yc = oracle.openConnection();
       BufferedReader in;
       in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
