@@ -11,11 +11,11 @@ import java.util.concurrent.Executors;
 public class RadarUpdater implements Runnable
 {
   ExecutorService executor;
-  WeatherFrame caller;
+  UpdateListener notifier;
 
-  public RadarUpdater(WeatherFrame caller)
+  public RadarUpdater(UpdateListener notifier)
   {
-    this.caller = caller;
+    this.notifier = notifier;
     executor = Executors.newFixedThreadPool(1);
     executor.execute(this);
   }
@@ -35,7 +35,7 @@ public class RadarUpdater implements Runnable
       } finally
       {
         if(img != null)
-          caller.setRadarImage(img);
+          notifier.radarUpdated(img);
       }
       try
       {
@@ -45,5 +45,10 @@ public class RadarUpdater implements Runnable
         e.printStackTrace();
       }
     }
+  }
+
+  public interface UpdateListener
+  {
+    public void radarUpdated(BufferedImage updatedImg);
   }
 }

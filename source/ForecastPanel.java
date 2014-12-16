@@ -9,7 +9,7 @@ public class ForecastPanel extends JPanel
   public ForecastPanel()
   {
     super();
-    setBackground(Color.RED);
+    setBackground(Color.GRAY);
   }
 
 }

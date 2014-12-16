@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class WeatherFrame extends JFrame
+public class WeatherFrame extends JFrame implements RadarUpdater.UpdateListener
 {
   String data = "";
   BufferedImage radar;
@@ -18,7 +18,6 @@ public class WeatherFrame extends JFrame
   int width, height;
   ConditionsPanel sideBar;
   ForecastPanel bottomBar;
-  RadarUpdater radarService;
 
 
   public WeatherFrame()
@@ -33,7 +32,7 @@ public class WeatherFrame extends JFrame
     repaint();
 
     setupSidebars();
-    radarService = new RadarUpdater(this);
+    RadarUpdater radarService = new RadarUpdater(this);
   }
 
   public void setupSidebars()
@@ -56,12 +55,6 @@ public class WeatherFrame extends JFrame
     bottomBar.setBounds(getInsets().left, (int) (height * (1 - marginBottom)), (int) (width * (1 - marginRight)), (int) (height * marginBottom));
     sideBar.setBounds(getInsets().left + (int)(width * (1-marginRight)), 0, (int)(width * marginRight), height);
     validate();
-  }
-
-  public void setRadarImage(BufferedImage radarImg)
-  {
-    radar = radarImg;
-    repaint();
   }
 
   public void getConditions()
@@ -101,5 +94,12 @@ public class WeatherFrame extends JFrame
     {
       g.drawImage(radar, getInsets().left, getInsets().top, (int) (width * (1 - marginRight)), (int)(height * (1 - marginBottom)), this);
     }
+  }
+
+  @Override
+  public void radarUpdated(BufferedImage updatedImg)
+  {
+    radar = updatedImg;
+    repaint();
   }
 }
