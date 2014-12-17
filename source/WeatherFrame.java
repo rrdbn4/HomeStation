@@ -57,33 +57,6 @@ public class WeatherFrame extends JFrame implements RadarUpdater.UpdateListener
     validate();
   }
 
-  public void getConditions()
-  {
-    try
-    {
-      URL oracle = new URL(Constants.URL_BASE + Constants.CONDITIONS_URL);
-      URLConnection yc = oracle.openConnection();
-      BufferedReader in;
-      in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
-      String inputLine;
-      while ((inputLine = in.readLine()) != null)
-      {
-        System.out.println(inputLine);
-        data += (inputLine + '\n');
-      }
-      in.close();
-    } catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-    JTextArea text = new JTextArea(data);
-    JScrollPane pane = new JScrollPane(text);
-    pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-    pane.setBounds(23, 40, 394, 191);
-    add(pane);
-    validate();
-  }
-
   public void paint(Graphics g)
   {
     super.paint(g);
