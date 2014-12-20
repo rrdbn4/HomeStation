@@ -39,7 +39,7 @@ public class RadarUpdater implements Runnable
       }
       try
       {
-        Thread.sleep(60000);
+        Thread.sleep(900000); //15 minutes
       } catch (InterruptedException e)
       {
         e.printStackTrace();

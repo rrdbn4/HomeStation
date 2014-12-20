@@ -14,7 +14,7 @@ public class WeatherFrame extends JFrame implements RadarUpdater.UpdateListener
   String data = "";
   BufferedImage radar;
   final float marginRight = 0.25f;
-  final float marginBottom = 0.25f;
+  final float marginBottom = 0.01f;
   int width, height;
   ConditionsPanel sideBar;
   ForecastPanel bottomBar;
