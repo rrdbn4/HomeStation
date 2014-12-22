@@ -14,17 +14,19 @@ public class ConditionsPanel extends JPanel implements ClockUpdater.TimeChangeLi
 {
   private String clock = "00:00";
   public BufferedImage weatherIcon = null;
-  private int cells = 7;
+  private final float topMargin = 0.3f;
+  private HourlyPanel forecastContainer;
 
   public ConditionsPanel()
   {
     super();
-    this.setBackground(Color.LIGHT_GRAY);
-    this.setLayout(new GridLayout(7, 1));
-    JLabel empty = new JLabel(" ");
-    add(empty);
+    this.setLayout(null);
     ClockUpdater updater = new ClockUpdater(this);
     ConditionsUpdater condUpdater = new ConditionsUpdater(this);
+
+    forecastContainer = new HourlyPanel();
+    add(forecastContainer);
+    validate();
   }
 
   @Override
@@ -39,21 +41,18 @@ public class ConditionsPanel extends JPanel implements ClockUpdater.TimeChangeLi
   public void conditionUpdate(JSONObject conditions, BufferedImage weatherIcon)
   {
     if(conditions != null)
-      System.out.println(conditions.get("wind_gust_mph").toString());
+    {
+
+    }
     if(weatherIcon != null)
       this.weatherIcon = weatherIcon;
     repaint();
-//    for(int i = 6; i < 6; i++)
-//    {
-//      JLabel lb = new JLabel(new ImageIcon(weatherIcon));
-//      add(lb);
-//    }
-//    validate();
   }
 
   public void paintComponent(Graphics g)
   {
     super.paintComponent(g);
+    forecastContainer.setBounds(0, (int)(this.getHeight() * topMargin), getWidth(), (getHeight() - (int)(getHeight() * topMargin)));
     g.setFont(new Font("Helvetica", Font.BOLD, (int)(getWidth() * 0.19f)));
 
     g.drawString(clock, (int)(getWidth()/2f - g.getFontMetrics().stringWidth(clock)/2f), g.getFontMetrics().getHeight());
