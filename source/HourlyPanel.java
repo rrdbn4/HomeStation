@@ -24,8 +24,7 @@ public class HourlyPanel extends JPanel implements HourlyForecastUpdater.UpdateL
     for(int i = 0; i < numForecastHours; i++)
     {
       hours[i] = new OneHourForecastPanel();
-      hours[i].setBackground((i % 2 == 0 ? Color.LIGHT_GRAY : Color.GRAY));
-      hours[i].setSize(100, 100);
+      hours[i].setBackground(Color.LIGHT_GRAY);
       add(hours[i]);
     }
     validate();
@@ -62,8 +61,8 @@ public class HourlyPanel extends JPanel implements HourlyForecastUpdater.UpdateL
       super();
       setVisible(true);
       setLayout(new GridLayout(1, 4));
-      Font font = new Font("Helvetica", Font.BOLD, 20);
-      icon = new JLabel("", JLabel.CENTER);
+      Font font = new Font("Helvetica", Font.BOLD, 16);
+      icon = new JLabel("", JLabel.LEFT);
       add(icon);
       time = new JLabel("00AM", JLabel.LEFT);
       time.setFont(font);
@@ -94,6 +93,8 @@ public class HourlyPanel extends JPanel implements HourlyForecastUpdater.UpdateL
     public void paintComponent(Graphics g)
     {
       super.paintComponent(g);
+      g.setColor(Color.BLACK);
+      g.drawLine(0, getHeight()-1, getWidth(), getHeight()-1);
     }
 
     @Override
