@@ -38,6 +38,7 @@ public class ConditionsUpdater implements Runnable
     while(true)
     {
       String data = "";
+      boolean retryConnection = false;
       try
       {
         URL oracle = new URL(Constants.URL_BASE + Constants.CONDITIONS_URL);
@@ -52,11 +53,16 @@ public class ConditionsUpdater implements Runnable
         in.close();
       } catch (IOException e)
       {
+        retryConnection = true;
+        ErrorThrower.inst().setConnectionError(true);
+        Logger.logError("current conditions");
         e.printStackTrace();
       }
 
       if(!data.isEmpty())
       {
+        ErrorThrower.inst().setConnectionError(false);
+        Logger.log("current conditions");
         JSONObject obj = (JSONObject) JSONValue.parse(data);
         JSONObject condObj = (JSONObject) obj.get("current_observation");
 
@@ -71,10 +77,18 @@ public class ConditionsUpdater implements Runnable
 
         notifier.conditionUpdate(condObj, img);
       }
+      else
+      {
+        ErrorThrower.inst().setConnectionError(true);
+        Logger.logError("current conditions");
+      }
 
       try
       {
-        Thread.sleep(900000); //15 minutes
+        if(retryConnection)
+          Thread.sleep(120000); //2 minutes
+        else
+          Thread.sleep(900000); //15 minutes
       } catch (InterruptedException e)
       {
         e.printStackTrace();

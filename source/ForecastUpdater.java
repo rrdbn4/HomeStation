@@ -31,6 +31,7 @@ public class ForecastUpdater implements Runnable
     while(true)
     {
       String data = "";
+      boolean retryConnection = false;
       try
       {
         URL oracle = new URL(Constants.URL_BASE + Constants.FORECAST_URL);
@@ -45,11 +46,16 @@ public class ForecastUpdater implements Runnable
         in.close();
       } catch (IOException e)
       {
+        retryConnection = true;
+        ErrorThrower.inst().setConnectionError(true);
+        Logger.logError("daily forecast");
         e.printStackTrace();
       }
 
       if(!data.isEmpty())
       {
+        ErrorThrower.inst().setConnectionError(false);
+        Logger.log("daily forecast");
         JSONObject obj = (JSONObject) JSONValue.parse(data);
         JSONObject foreObj = (JSONObject) obj.get((String)"forecast");
         JSONObject simpleObj = (JSONObject) foreObj.get((String)"simpleforecast");
@@ -57,10 +63,18 @@ public class ForecastUpdater implements Runnable
 
         notifier.forecastUpdate(forecastArr);
       }
+      else
+      {
+        ErrorThrower.inst().setConnectionError(true);
+        Logger.logError("daily forecast");
+      }
 
       try
       {
-        Thread.sleep(3600000); //60 minutes
+        if(retryConnection)
+          Thread.sleep(120000); //2 minutes
+        else
+          Thread.sleep(3600000); //60 minutes
       } catch (InterruptedException e)
       {
         e.printStackTrace();

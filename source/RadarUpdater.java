@@ -26,20 +26,30 @@ public class RadarUpdater implements Runnable
     while(true)
     {
       BufferedImage img = null;
+      boolean retryConnection = false;
       try
       {
         img = ImageIO.read(new URL(Constants.URL_BASE + Constants.RADAR_LOCAL_URL));
       } catch (IOException e)
       {
+        retryConnection = true;
+        ErrorThrower.inst().setConnectionError(true);
+        Logger.logError("radar image");
         e.printStackTrace();
-      } finally
-      {
-        if(img != null)
-          notifier.radarUpdated(img);
       }
+      if(img != null)
+      {
+        ErrorThrower.inst().setConnectionError(false);
+        Logger.log("radar image");
+        notifier.radarUpdated(img);
+      }
+
       try
       {
-        Thread.sleep(900000); //15 minutes
+        if(retryConnection)
+          Thread.sleep(120000); //2 minutes
+        else
+          Thread.sleep(600000); //10 minutes
       } catch (InterruptedException e)
       {
         e.printStackTrace();

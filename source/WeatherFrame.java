@@ -9,15 +9,17 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class WeatherFrame extends JFrame implements RadarUpdater.UpdateListener
+public class WeatherFrame extends JFrame implements RadarUpdater.UpdateListener, ErrorStateChangedListener
 {
   String data = "";
   BufferedImage radar;
   final float marginRight = 0.25f;
   final float marginBottom = 0.18f;
   int width, height;
+  boolean isInErrorState = false;
   ConditionsPanel sideBar;
   ForecastPanel bottomBar;
+  RadarUpdater radarService;
 
 
   public WeatherFrame()
@@ -31,8 +33,10 @@ public class WeatherFrame extends JFrame implements RadarUpdater.UpdateListener
     validate();
     repaint();
 
+    ErrorThrower.inst().setErrorChangedListener(this);
+
     setupSidebars();
-    RadarUpdater radarService = new RadarUpdater(this);
+    radarService = new RadarUpdater(this);
   }
 
   public void setupSidebars()
@@ -67,12 +71,26 @@ public class WeatherFrame extends JFrame implements RadarUpdater.UpdateListener
     {
       g.drawImage(radar, getInsets().left, getInsets().top, (int) (width * (1 - marginRight)), (int)(height * (1 - marginBottom)), this);
     }
+    if(isInErrorState)
+    {
+      g.setColor(Color.RED);
+      g.setFont(new Font("Helvetica", Font.BOLD, 60));
+      String s = "NO INTERNET CONNECTION";
+      g.drawString(s, getWidth() / 2 - g.getFontMetrics().stringWidth(s) / 2, g.getFont().getSize() + 20);
+    }
   }
 
   @Override
   public void radarUpdated(BufferedImage updatedImg)
   {
     radar = updatedImg;
+    repaint();
+  }
+
+  @Override
+  public void errorStateChanged(boolean isConnectionError)
+  {
+    isInErrorState = isConnectionError;
     repaint();
   }
 }

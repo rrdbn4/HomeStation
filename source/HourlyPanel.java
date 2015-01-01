@@ -13,12 +13,13 @@ public class HourlyPanel extends JPanel implements HourlyForecastUpdater.UpdateL
   public static final int numForecastHours = 14;
   private OneHourForecastPanel[] hours;
   private JSONArray hourlyForecastData = null;
+  HourlyForecastUpdater updater;
 
   public HourlyPanel()
   {
     super();
     this.setLayout(new GridLayout(numForecastHours, 1));
-    HourlyForecastUpdater updater = new HourlyForecastUpdater(this);
+    updater = new HourlyForecastUpdater(this);
 
     hours = new OneHourForecastPanel[numForecastHours];
     for(int i = 0; i < numForecastHours; i++)

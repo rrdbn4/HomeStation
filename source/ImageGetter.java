@@ -34,7 +34,8 @@ public class ImageGetter implements Runnable
     {
       e.printStackTrace();
     }
-    notifier.imageRetrieved(img);
+    if(img != null)
+      notifier.imageRetrieved(img);
   }
 
   public interface ImageReturnListener

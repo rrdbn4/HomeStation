@@ -12,6 +12,7 @@ public class ForecastPanel extends JPanel implements ForecastUpdater.UpdateListe
 {
   private final int numForecastDays = 5;
   private OneDayForecast[] dayPanels;
+  ForecastUpdater updater;
 
   public ForecastPanel()
   {
@@ -24,7 +25,7 @@ public class ForecastPanel extends JPanel implements ForecastUpdater.UpdateListe
       dayPanels[i] = new OneDayForecast();
       add(dayPanels[i]);
     }
-    ForecastUpdater updater = new ForecastUpdater(this);
+    updater = new ForecastUpdater(this);
   }
 
   public void paintComponent(Graphics g)

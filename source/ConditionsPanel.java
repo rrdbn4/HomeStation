@@ -19,13 +19,14 @@ public class ConditionsPanel extends JPanel implements ClockUpdater.TimeChangeLi
   public BufferedImage weatherIcon = null;
   private final float topMargin = 0.3f;
   private HourlyPanel forecastContainer;
+  ConditionsUpdater condUpdater;
 
   public ConditionsPanel()
   {
     super();
     this.setLayout(null);
     ClockUpdater updater = new ClockUpdater(this);
-    ConditionsUpdater condUpdater = new ConditionsUpdater(this);
+    condUpdater = new ConditionsUpdater(this);
 
     forecastContainer = new HourlyPanel();
     add(forecastContainer);

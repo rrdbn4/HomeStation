@@ -33,6 +33,7 @@ public class HourlyForecastUpdater implements Runnable
     while(true)
     {
       String data = "";
+      boolean retryConnection = false;
       try
       {
         URL oracle = new URL(Constants.URL_BASE + Constants.HOURLY_URL);
@@ -47,20 +48,33 @@ public class HourlyForecastUpdater implements Runnable
         in.close();
       } catch (IOException e)
       {
+        ErrorThrower.inst().setConnectionError(true);
+        Logger.logError("hourly forecast");
+        retryConnection = true;
         e.printStackTrace();
       }
 
       if(!data.isEmpty())
       {
+        ErrorThrower.inst().setConnectionError(false);
+        Logger.log("hourly forecast");
         JSONObject obj = (JSONObject) JSONValue.parse(data);
         JSONArray hourlyArr = (JSONArray) obj.get("hourly_forecast");
 
         notifier.forecastUpdate(hourlyArr);
       }
+      else
+      {
+        ErrorThrower.inst().setConnectionError(true);
+        Logger.logError("hourly forecast");
+      }
 
       try
       {
-        Thread.sleep(900000); //15 minutes
+        if(retryConnection)
+          Thread.sleep(120000); //2 minutes
+        else
+          Thread.sleep(900000); //15 minutes
       } catch (InterruptedException e)
       {
         e.printStackTrace();
