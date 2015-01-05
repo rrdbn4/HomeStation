@@ -36,6 +36,7 @@ public class ImageGetter implements Runnable
     }
     if(img != null)
       notifier.imageRetrieved(img);
+    executor.shutdown();
   }
 
   public interface ImageReturnListener
